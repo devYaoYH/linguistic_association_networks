@@ -3,6 +3,9 @@ if [ -f "$data/GoogleNews-vectors-negative300.bin" ]; then
 	if [ -d "$common_subset" ]; then
 		mkdir common_subset
 	fi
+	echo "Installing python dependencies"
+	pip install -r whl_packages/req.txt
+	echo "Finished installing python dependenceis :)"
 	echo "Running setup python scripts"
 	python filter_words.py
 	python save_dict.py
