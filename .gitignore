@@ -1,0 +1,6 @@
+# exclude data (we can build this)
+common_subset/*
+data/*
+
+*.json
+*.ann
