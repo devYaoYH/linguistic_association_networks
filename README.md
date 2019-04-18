@@ -1,4 +1,4 @@
-# Constructing Smallworld Networks from word2vec vectors
+# Constructing Networks from word2vec vectors
 
 ## Setup Instructions:
 
@@ -6,9 +6,9 @@
 2. Make sure you have python3.7 64bit installed and have it in your PATH
 3. Run `sh setup.sh` bash script from an admin console
 4. Run `sh cache.sh` bash script to run python scripts to generate file dependencies
-5. Run `python smallworld.py` to run the graph generating script
+5. Run `python network.py <graph> <limit>` to run the graph generating script
 
-A `smallworld_network.json` file will be generated which contains our graph information.
+A `network_<graph>_<limit>.json` file will be generated which contains our graph information.
 
 ## References:
 1. http://www.leonidzhukov.net/hse/2015/networks/lectures/lecture4.pdf

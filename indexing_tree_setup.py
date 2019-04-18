@@ -26,6 +26,7 @@ with open("common_subset/google-10000-filtered.txt", "r") as fin:
 			word_to_idx[w] = conut
 			conut += 1
 fin.close()
+word_list = word_list[:1000]
 
 model = AnnoyIndex(len(vsm[word_list[0]]))
 

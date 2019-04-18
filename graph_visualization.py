@@ -1,10 +1,11 @@
+import sys
 import json
 import igraph as ig
 import plotly as py
 import plotly.graph_objs as go
 
 data = None
-with open("smallworld_network_tiny.json", "r") as fin:
+with open("smallworld_network.json", "r") as fin:
 	data = json.load(fin)
 fin.close()
 
@@ -16,11 +17,14 @@ G = ig.Graph()
 G.add_vertices(N)
 G.add_edges(Edges)
 
+print("Created Graph Object")
+sys.stdout.flush()
+
 labels = []
 for node in data['nodes']:
 	labels.append(node['name'])
 
-layt = G.layout('kk', dim=3)
+layt = G.layout('kk3d', dim=3)
 
 Xn=[layt[k][0] for k in range(N)]# x-coordinates of nodes
 Yn=[layt[k][1] for k in range(N)]# y-coordinates
@@ -33,6 +37,9 @@ for e in Edges:
     Ye+=[layt[e[0]][1],layt[e[1]][1], None]  
     Ze+=[layt[e[0]][2],layt[e[1]][2], None]  
 
+print("Loaded graph data...")
+sys.stdout.flush()
+
 trace1=go.Scatter3d(x=Xe,
                y=Ye,
                z=Ze,
@@ -40,6 +47,9 @@ trace1=go.Scatter3d(x=Xe,
                line=dict(color='rgb(125,125,125)', width=1),
                hoverinfo='none'
                )
+
+print("Plotted Lines")
+sys.stdout.flush()
 
 trace2=go.Scatter3d(x=Xn,
                y=Yn,
@@ -55,6 +65,9 @@ trace2=go.Scatter3d(x=Xn,
                hoverinfo='text'
                )
 
+print("Plotted Nodes")
+sys.stdout.flush()
+
 axis=dict(showbackground=False,
           showline=False,
           zeroline=False,
@@ -62,6 +75,9 @@ axis=dict(showbackground=False,
           showticklabels=False,
           title=''
           )
+
+print("Plotted Axis")
+sys.stdout.flush()
 
 layout = go.Layout(
          title="10000-most common English Words Smallworld Network (3D visualization)",
@@ -93,7 +109,13 @@ layout = go.Layout(
             )
         ],    )
 
+print("Plotted Layout")
+sys.stdout.flush()
+
 data=[trace1, trace2]
 fig=go.Figure(data=data, layout=layout)
+
+print("Writing to html")
+sys.stdout.flush()
 
 py.offline.plot(fig, filename='top10000-smallworld')
