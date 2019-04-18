@@ -9,7 +9,7 @@
 5. Run `python network.py -t gexf <graph> <limit>` to run the graph generating script and generate a .gexf graph output for visualization
 6. See `python network.py -h` for the full utilization options
 
-A `network_<graph>_<limit>.json` file will be generated which contains our graph information.
+A `network_<graph>_<limit>.gexf` file will be generated which contains our graph information.
 
 ## Graph Visualization:
 
@@ -23,7 +23,7 @@ Nodes are colored in a (white-green) gradient based on their degree of connectiv
 
 Filtering low-similarity edges (cosine similarity further from 1) from our initially dense complete graph:
 ```python
-dist = abs(1 - model.get_distance(source, target))
+dist = 1 - model.get_distance(source, target)
 if (dist > 0.1 and edges > k):
 	break
 ```
