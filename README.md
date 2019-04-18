@@ -19,6 +19,8 @@ A `network_<graph>_<limit>.json` file will be generated which contains our graph
 
 The above network is plotted using the data in complete_network_tight3.gexf generated from running `python network.py -t gexf -f complete_network_tight3 complete 1000 3 15`. It contains 1000 Nodes (representing the top 1000 most frequently used english words) and 6465 Edges.
 
+Nodes are colored in a (white-green) gradient based on their degree of connectivity. Nodes with more connections appear brighter (white). We observe two major clusters in this image. The bottom-left cluster are Nouns (Country, Companies, Months, Locations) things that tends to appear in the headline for news articles. This is no surprise here since the vectors used are learned on a news corpus. The cluster near the top right are descriptive adjectives. A Grammatical separation is hinted at here (large similarity based on part of speech may be inherent within these vectors).
+
 Filtering low-similarity edges (cosine similarity further from 1) from our initially dense complete graph:
 ```python
 dist = abs(1 - model.get_distance(source, target))
