@@ -15,13 +15,13 @@ A `network_<graph>_<limit>.json` file will be generated which contains our graph
 
 [Gephi](https://gephi.org/) is used to visualize our graph data.
 
-![Sample.PNG](sample.PNG)
+![sample.png](sample.png)
 
 The above network is plotted using the data in complete_network_tight3.gexf generated from running `python network.py -t gexf -f complete_network_tight3 complete 1000 3 15`. It contains 1000 Nodes (representing the top 1000 most frequently used english words) and 6465 Edges.
 
 Filtering low-similarity edges (cosine similarity further from 1) from our initially dense complete graph:
 ```python
-dist = abs(1 - model.get_distance(source, word_to_idx[ow]))
+dist = abs(1 - model.get_distance(source, target))
 if (dist > 0.1 and edges > k):
 	break
 ```
