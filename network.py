@@ -138,6 +138,9 @@ def write_json(graph, fname):
     with open(fname, "w+") as fout:
         json.dump(json_graph, fout)
     fout.close()
+    with open(fname.split('.')[0]+"_log.json", "w+") as fout:
+        json.dump(graph, fout);
+    fout.close()
 
 # Write to .gexf
 def write_gexf(graph, fname):
@@ -165,6 +168,9 @@ def write_gexf(graph, fname):
             source, target, value = tup
             fout.write("                <edge id=\"{}\" source=\"{}\" target=\"{}\" />\n".format(i, source, target))
         fout.write(gexf_footer)
+    fout.close()
+    with open(fname.split('.')[0]+"_log.json", "w+") as fout:
+        json.dump(graph, fout);
     fout.close()
 
 
