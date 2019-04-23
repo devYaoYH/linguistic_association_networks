@@ -1,6 +1,7 @@
 import sys
 import json
 import queue
+import random
 
 # Parse cmd Arguments
 argv = []
@@ -25,9 +26,18 @@ if (argc < 2):
 
 # Load graph
 graph = dict()
-with open(sys.argv[1], "r") as fin:
-	graph = json.load(fin)
-fin.close()
+try:
+	with open(argv[1], "r") as fin:
+		graph = json.load(fin)
+	fin.close()
+	print("")
+	print("###################################")
+	print("# Interactive Graph Query Console #")
+	print("###################################")
+	print("")
+except:
+	print("File I/O Error: {} cannot be opened".format(argv[1]))
+	exit()
 
 # Nodes
 word_list = graph['nodes']
@@ -78,19 +88,73 @@ def bfs(s, t):
 			q.put((adj, dist+1, li[:]+[word_list[adj]]))
 	return (None, [])
 
+# Dijkstra measurement: Heuristic by path weight (not path length)
+def dijkstra(s, t, decay=0):
+	v = set()
+	q = queue.PriorityQueue()
+	q.put((0, s, 0, [word_list[s]]))
+	while(not q.empty()):
+		tot_dist, n, dist, li = q.get()
+		if (n == t):
+			return (tot_dist, li)
+		v.add(n)
+		for adj, weight in adjList[n]:
+			if (adj in v):
+				continue
+			# Multiplicative
+			# q.put(((tot_dist+weight)*(1+decay), adj, dist+1, li[:]+[word_list[adj]]))
+			# Additive
+			q.put((tot_dist+weight+decay, adj, dist+1, li[:]+[word_list[adj]]))
+	return (None, [])
+
+# Run a bunch of random bfs(source -> target) scans to determine average path length connectivity
+#	k = 1000 | avg = 4.66500
+def avg_path(k):
+	size = len(word_list)
+	p_len_tot = 0
+	tot_num = k
+	for i in range(k):
+		if (i%10 == 0):
+			print("...done {}/{}".format(i, k))
+		s = random.randint(0, size-1)
+		t = random.randint(0, size-1)
+		cur_len = bfs(s, t)[0]
+		if (cur_len is not None):
+			p_len_tot += cur_len
+		else:
+			tot_num -= 1
+	return p_len_tot/tot_num
+
+# Help message for script
+def run_help():
+	print("Usage Instructions:")
+	help_entries = []
+	help_entries.append(("<prime> <target>:","Type in word pairs to query network path length between them"))
+	help_entries.append(("<prime> <target> -d:", "Type in a word pair with the '-d' specifier to search based on edge weight"))
+	help_entries.append(("<word>:","Type a single word to list its edges"))
+	help_entries.append(("-help:","print this usage message"))
+	help_entries.append(("-list:","list all nodes (words) in graph"))
+	help_entries.append(("-quit:","exit program"))
+	help_entries.append(("-hub <num>:","list top <num> most connected nodes in graph"))
+	help_entries.append(("-avg <num>:","run <num> random searches through the graph to compute average path length"))
+	max_hint_len = max([len(e[0]) for e in help_entries])
+	print_string = "{:>"+str(max_hint_len+4)+"} {}"
+	for e in help_entries:
+		print(print_string.format(e[0], e[1]))
+	print("")
+
 # Interactive Script for us to query path lengths
 def run():
-	print("Usage Instructions:")
-	print("  <prime> <target>: Type in word pairs to query network path length between them")
-	print("            <word>: Type a single word to list its edges")
-	print("             -help: Type 'help' to list all nodes (words) in graph")
-	print("             -quit: Type 'quit' to exit program")
-	print("        -hub <num>: Type 'hub' to list top <num> most connected nodes in graph")
-	query = input()
+	run_help()
+	query = input(">>> ")
 	while(query != "-quit"):
-		if (query == "-help"):
+		if (query == "-list"):
 			print(help_list)
-			query = input()
+			query = input(">>> ")
+			continue
+		if (query == "-help"):
+			run_help()
+			query = input(">>> ")
 			continue
 		try:
 			source, target = query.split()[:2]
@@ -98,23 +162,27 @@ def run():
 			source = query.split()[0]
 			if (len(source) < 1):
 				print("Query is empty")
-				query = input()
+				query = input(">>> ")
 				continue
 			else:
 				try:
 					for w, val in [(word_list[i], v) for i, v in adjList[word_to_idx[source]]]:
-						print(w, val)
+						print("   {:<15} {}".format(w, val))
 				except KeyError:
 					print("Word: {} NOT FOUND".format(source))
-			query = input()
+			query = input(">>> ")
 			continue
 		if (source == '-hub'):
 			top = int(target)
 			for idx in hubs[:top]:
 				print("{} ({})".format(word_list[idx], len(adjList[idx])))
 				for w, val in adjList[idx]:
-					print("   ", word_list[w], val)
-			query = input()
+					print("    {:<15} {}".format(word_list[w], val))
+			query = input(">>> ")
+			continue
+		if (source == '-avg'):
+			print("    Average path length: {:.5f}".format(avg_path(int(target))))
+			query = input(">>> ")
 			continue
 		valid = True
 		try:
@@ -130,13 +198,17 @@ def run():
 		
 		# If both are contained within our graph, we commence bfs lookup
 		if (valid):
-			dist, path = bfs(source_idx, target_idx)
+			terms = query.split()
+			if (len(terms) > 2 and terms[2] == '-d'):
+				dist, path = dijkstra(source_idx, target_idx, decay=float(terms[3]) if len(terms) > 3 else 0.0)
+			else:
+				dist, path = bfs(source_idx, target_idx)
 			if (dist is not None):
-				print("Network distance: {}\nPath: {}".format(dist, path))
+				print("    Network distance: {}\n    Path: {}".format(dist, path))
 			else:
 				print("Path NOT FOUND. {} and {} are not connected in this graph".format(source, target))
 
 		# Continue with next query
-		query = input()
+		query = input(">>> ")
 
 run()
