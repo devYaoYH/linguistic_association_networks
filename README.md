@@ -29,6 +29,29 @@ if (dist > 0.1 and edges > k):
 ```
 We limit a 0.1 deviation from 1 (exactly similar) to our edges (but ensure we have at least k edges per node).
 
+## Network Navigation Console:
+
+`network.py` generates an additional `_log.json` file in addition to the required visualization file output. We can load this network into our console to query about its attributes and examine connectivity between nodes in this network.
+
+Run `python interactive_network.py` with an additional `_log.json` that names the network log file we want to load and examine. Use the `-h` argument to print usage options. An additional `-d` flag can passed to enable directed mode for interpreting edges in our graph log file.
+
+Once inside our console, we can query a variety of information regarding the graph. Typing `-help` shows the currently implemented functions:
+```
+Usage Instructions:
+       <prime> <target>: Type in word pairs to query network path length between them
+    <prime> <target> -d: Type in a word pair with the '-d' specifier to search based on edge weight
+                 <word>: Type a single word to list its edges
+                  -help: print this usage message
+                  -list: list all nodes (words) in graph
+                  -quit: exit program
+             -hub <num>: list top <num> most connected nodes in graph
+             -avg <num>: run <num> random searches through the graph to compute average path length
+```
+
+<aside class="warning">
+Currently, we do not have a save to file option for queried data. An option will be added later. This is just an exploratory prototype for now. (Not meant for rigorous network analysis)
+</aside>
+
 ## References:
 1. http://www.leonidzhukov.net/hse/2015/networks/lectures/lecture4.pdf
 	- Preferential attachment models
