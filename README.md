@@ -48,9 +48,7 @@ Usage Instructions:
              -avg <num>: run <num> random searches through the graph to compute average path length
 ```
 
-<aside class="warning">
-Currently, we do not have a save to file option for queried data. An option will be added later. This is just an exploratory prototype for now. (Not meant for rigorous network analysis)
-</aside>
+> Currently, we do not have a save to file option for queried data. An option will be added later. This is just an exploratory prototype for now. (Not meant for rigorous network analysis)
 
 ## References:
 1. http://www.leonidzhukov.net/hse/2015/networks/lectures/lecture4.pdf
