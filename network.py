@@ -9,11 +9,13 @@ networks = ["complete", "smallworld"]
 COMPLETE = networks[0]
 SMALLWORLD = networks[1]
 
+DATASET = "nelson_5018"
+
 # Parse Command Line Arguments
 args = []
 opt = COMPLETE
 type_args = [3, 10]
-limit = 1000
+limit = 5013
 optional_args = dict()
 i = 1
 while(i < len(sys.argv)):
@@ -31,7 +33,7 @@ while(i < len(sys.argv)):
             print("<args>:")
             print("smallworld    m(num edges per turn), k(k-nearest)")
             print("  complete    k(min edges per node), k2(max edges per node)")
-            exit()
+            sys.exit()
         optional_args[arg[1:]] = sys.argv[i+1]
         i += 1
     else:
@@ -59,24 +61,25 @@ stopwords_filter = set()
 
 print("Loading VSM .... ", end="")
 sys.stdout.flush()
-with open("common_subset/dic.json", "r") as fin:
+with open("common_subset/" + DATASET + ".json", "r") as fin:
     vsm = json.load(fin)
 fin.close()
 print("done")
 sys.stdout.flush()
 
-print("Loading nltk english stopwords ... ", end="")
-sys.stdout.flush()
-with open("nltk_stopwords.txt", "r") as fin:
-    for line in fin:
-        stopwords_filter.add(line.split()[0])
-fin.close()
-print("done")
-sys.stdout.flush()
+if (False):
+    print("Loading nltk english stopwords ... ", end="")
+    sys.stdout.flush()
+    with open("nltk_stopwords.txt", "r") as fin:
+        for line in fin:
+            stopwords_filter.add(line.split()[0])
+    fin.close()
+    print("done")
+    sys.stdout.flush()
 
-print("Loading top 10000 common english words ... ", end="")
+print("Loading " + DATASET + "words ... ", end="")
 sys.stdout.flush()
-with open("common_subset/google-10000-filtered.txt", "r") as fin:
+with open("common_subset/" + DATASET + ".txt", "r") as fin:
     conut = 0
     for line in fin:
         w = line.split()[0]
@@ -122,7 +125,7 @@ def load_tree():
     global model
     if (model is None):
         model = AnnoyIndex(len(vsm[word_list[0]]))
-        model.load("top-10000.ann")
+        model.load(DATASET + ".ann")
         print("Annoying Tree Loaded")
         sys.stdout.flush()
 

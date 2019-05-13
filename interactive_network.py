@@ -41,6 +41,7 @@ except:
 
 # Nodes
 word_list = graph['nodes']
+print(word_list)
 help_list = sorted(word_list)
 word_to_idx = {w: i for i, w in enumerate(word_list)}
 valid_words = set(word_list)
@@ -68,9 +69,27 @@ for edge in graph['edges']:
 
 # Sorts adjacency list by weight
 for n in range(len(word_list)):
-	adjList[n] = sorted(adjList[n], key=lambda x: x[1])
+	try:
+		adjList[n] = sorted(adjList[n], key=lambda x: x[1])
+	except KeyError:
+		adjList[n] = []
+		print("word[{}]: {} DOES NOT HAVE EDGES".format(n, word_list[n]))
 
 hubs = sorted(adjList.keys(), key=lambda x: len(adjList[x]), reverse=True)
+
+# Local Clustering Coefficient
+def cluster_coeff(s):
+	direct_neighbors = set([w[0] for w in adjList[s]])
+	total_possible_conections = len(direct_neighbors)*(len(direct_neighbors)-1)/2
+	if (total_possible_conections == 0):
+		return 0
+	local_links = 0
+	for w in direct_neighbors:
+		for to_node in [w[0] for w in adjList[w]]:
+			if (to_node in direct_neighbors):
+				local_links += 1
+	local_links /= 2
+	return local_links/total_possible_conections
 
 # BFS Helper to measure path length
 def bfs(s, t):
@@ -137,6 +156,9 @@ def run_help():
 	help_entries.append(("-quit:","exit program"))
 	help_entries.append(("-hub <num>:","list top <num> most connected nodes in graph"))
 	help_entries.append(("-avg <num>:","run <num> random searches through the graph to compute average path length"))
+	help_entries.append(("-coeff:", "compute average clustering coefficient"))
+	help_entries.append(("-coeff <word>:", "compute local clustering coefficient of node"))
+	help_entries.append(("-scan <file> <output_file.csv>:", "scan file for prime:target pairs and query path length within our graph"))
 	max_hint_len = max([len(e[0]) for e in help_entries])
 	print_string = "{:>"+str(max_hint_len+4)+"} {}"
 	for e in help_entries:
@@ -165,6 +187,10 @@ def run():
 				query = input(">>> ")
 				continue
 			else:
+				if (source == '-coeff'):
+					print("Average clustering coefficient: {:.5f}".format(sum([cluster_coeff(i) for i in range(len(word_list))])/len(word_list)))
+					query = input(">>> ")
+					continue
 				try:
 					for w, val in [(word_list[i], v) for i, v in adjList[word_to_idx[source]]]:
 						print("   {:<15} {}".format(w, val))
@@ -172,6 +198,7 @@ def run():
 					print("Word: {} NOT FOUND".format(source))
 			query = input(">>> ")
 			continue
+		# Command Flags
 		if (source == '-hub'):
 			top = int(target)
 			for idx in hubs[:top]:
@@ -184,6 +211,58 @@ def run():
 			print("    Average path length: {:.5f}".format(avg_path(int(target))))
 			query = input(">>> ")
 			continue
+		if (source == '-coeff'):
+			try:
+				target_idx = word_to_idx[target]
+			except KeyError:
+				print("    Word: {} NOT FOUND".format(target))
+				query = input(">>> ")
+				continue
+			print("    Local Clustering co-efficient: {:.5f}".format(cluster_coeff(target_idx)))
+			query = input(">>> ")
+			continue
+		if (source == '-scan'):
+			data_file = target
+			try:
+				output_file = query.split()[2]
+			except:
+				print("    Error: <output_file> not specified")
+				query = input(">>> ")
+				continue
+			# Open files
+			log_file = open("_console.log", "w+")
+			fout = open(output_file, "w+")
+			fin = open(data_file, "r")
+			# Start parsing prime:target pairs
+			conut = 0
+			for line in fin:
+				conut += 1
+				prime, target = line.lower().split()
+				if (prime not in word_to_idx):
+					print("    Word: {} NOT FOUND".format(prime))
+					log_file.write("    Word: {} NOT FOUND\n".format(prime))
+					fout.write("-1 INVALID\n")
+					continue
+				elif (target not in word_to_idx):
+					print("    Word: {} NOT FOUND".format(target))
+					log_file.write("    Word: {} NOT FOUND\n".format(target))
+					fout.write("-1 INVALID\n")
+					continue
+				else:
+					print("    {}: {} -> {}".format(conut, prime, target), end="")
+					log_file.write("    {}: {} -> {}".format(conut, prime, target))
+					dist, path = bfs(word_to_idx[prime], word_to_idx[target])
+					print("|{}".format(len(path)))
+					log_file.write("|{}\n".format(len(path)))
+					fout.write(str(len(path)) + " ")
+					for w in path:
+						fout.write(w + " ")
+					fout.write("\n")
+				log_file.flush()
+				fout.flush()
+			fin.close()
+			fout.close()
+			log_file.close()
 		valid = True
 		try:
 			source_idx = word_to_idx[source]
@@ -204,7 +283,7 @@ def run():
 			else:
 				dist, path = bfs(source_idx, target_idx)
 			if (dist is not None):
-				print("    Network distance: {}\n    Path: {}".format(dist, path))
+				print("    Network distance: {} | Length: {}\n    Path: {}".format(dist, len(path), path))
 			else:
 				print("Path NOT FOUND. {} and {} are not connected in this graph".format(source, target))
 
