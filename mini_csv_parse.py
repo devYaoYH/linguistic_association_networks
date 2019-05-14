@@ -21,8 +21,9 @@ def parseColumns(fname):
 			data_row = []
 			for col in filter_cols:
 				data_row.append(columns[headers[col]][i])
+			print(data_row)
 			fout.write(" ".join(data_row))
 			fout.write("\n")
 	fout.close()
 
-parseColumns("data/demasking_task.dat")
+parseColumns("data/demasking_errors.dat")
