@@ -11,6 +11,19 @@
 
 A `network_<graph>_<limit>.gexf` file will be generated which contains our graph information.
 
+
+# Results
+
+## Nelson 5018 Semantic Association Wordlist
+
+![Nelson Word Network](nelson_bkg-01.png)
+
+Graphed using a pruned complete network by cosine similarity distance between nodes (`abs(a.dot(b) - 1) < 0.1`) and a minimum number of 3 edges for each node.
+
+Even within a much larger dataset, we observe clustering effects among the semantic concepts. Unsurprisingly, we get a average local clustering coefficient of `0.19355`.
+
+# Process Description
+
 ## Graph Visualization:
 
 [Gephi](https://gephi.org/) is used to visualize our graph data.
