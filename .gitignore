@@ -1,6 +1,9 @@
 # exclude data (we can build this)
 common_subset/*
 data/*
+__pycache__/*
+scripts/__pycache__/*
+*.py[cod]
 
 *.json
 *.ann
