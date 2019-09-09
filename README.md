@@ -24,6 +24,8 @@ Even within a much larger dataset, we observe clustering effects among the seman
 
 Mean response times of (prompt, target) pairs grouped by observed network path lengths from prompt to target:
 
+![Nelson RT against Path Length Plot](nelson_plottedRT.png)
+
 | Path Length | Mean Response Times | Standard Deviation |
 | ----------- |:-------------------:| ------------------:|
 | 2 | 1850.672788 | 253.341439 |
