@@ -22,6 +22,18 @@ Graphed using a pruned complete network by cosine similarity distance between no
 
 Even within a much larger dataset, we observe clustering effects among the semantic concepts. Unsurprisingly, we get a average local clustering coefficient of `0.19355`.
 
+Mean response times of (prompt, target) pairs grouped by observed network path lengths from prompt to target:
+
+| Path Length | Mean Response Times | Standard Deviation |
+| ----------- |:-------------------:| ------------------:|
+| 2 | 1850.672788 | 253.341439 |
+| 3 | 1955.860505 | 395.233799 |
+| 4 | 2142.147454 | 455.5789075 |
+| 5 | 2218.92387  | 475.9042756 |
+| 6 | 2254.852955 | 529.4472688 |
+| 7 | 2339.68549  | 466.4608815 |
+| 8 | 2107.908918 | 279.5967494 |
+
 # Process Description
 
 ## Graph Visualization:
