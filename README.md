@@ -16,7 +16,7 @@ For example: the (prompt, target) pair (REVIEW, ADJECTIVE) has the path (review 
 
 *In this comparison, the minimum path length is **2** for a target that is directly connected to a prompt.*
 
-Mean response times of (prompt, target) pairs grouped by observed network path lengths from prompt to target:
+### Mean response times of (prompt, target) pairs grouped by observed network path lengths from prompt to target:
 
 ![Nelson RT against Path Length Plot](nelson_plottedRT.png)
 
