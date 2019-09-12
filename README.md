@@ -1,5 +1,7 @@
 # Constructing Networks from word2vec vectors
 
+*Check out the [other branch](https://github.com/devYaoYH/linguistic_association_networks/tree/nelson_analysis#results) for plots of path length in networks against human lexical decision task response times*
+
 ## Setup Instructions:
 
 1. Download googlenews pre-trained vectors, unzip it and place it within a 'data/' folder in this project
