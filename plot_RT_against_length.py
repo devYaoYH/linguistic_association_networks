@@ -16,6 +16,13 @@ def parseColumns(rt_data):
 				network_lengths[length] = [time]
 	fin.close()
 
+	s_key_list = []
+	for key in network_lengths.keys():
+		s_key_list.append(key)
+	s_key_list = sorted(s_key_list)
+	for key in s_key_list:
+		print("{}: {}".format(key, len(network_lengths[key])))
+
 	# Compute Numpy std/mean for each length
 	output_fname = input("Output .csv name: ")
 	with open(output_fname, "w+") as fout:

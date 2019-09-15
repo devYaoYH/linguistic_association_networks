@@ -20,14 +20,14 @@ For example: the (prompt, target) pair (REVIEW, ADJECTIVE) has the path (review 
 
 ![Nelson RT against Path Length Plot](nelson_plottedRT.png)
 
-| Path Length | Mean Response Times | Standard Deviation |
-| ----------- |:-------------------:| ------------------:|
-| 2 | 1850.672788 | 253.341439 |
-| 3 | 1955.860505 | 395.233799 |
-| 4 | 2142.147454 | 455.5789075 |
-| 5 | 2218.92387  | 475.9042756 |
-| 6 | 2254.852955 | 529.4472688 |
-| 7 | 2339.68549  | 466.4608815 |
-| 8 | 2107.908918 | 279.5967494 |
+| Path Length | Mean Response Times | Standard Deviation | Number of Pairs |
+| ----------- |:-------------------:| ------------------:| ---------------:|
+| 2 | 1850.672788 | 253.341439 | 30 |
+| 3 | 1955.860505 | 395.233799 | 69| 
+| 4 | 2142.147454 | 455.5789075 | 87 |
+| 5 | 2218.92387  | 475.9042756 | 102 |
+| 6 | 2254.852955 | 529.4472688 | 125 |
+| 7 | 2339.68549  | 466.4608815 | 58 |
+| 8 | 2107.908918 | 279.5967494 | 4 |
 
 Probably due to forcing a minimum of 3 edges for each node, we have a maximum path length of only 8. Results from [2-7] are promising though as a clear increasing trend is observed. Removing this minimum limit would likely yield a better result (strictly increasing trend perhaps?)
